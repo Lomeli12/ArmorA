@@ -8,9 +8,8 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 import net.lomeli.armora.core.Proxy;
+import net.lomeli.armora.core.handler.IMCHandler;
 import net.lomeli.armora.libs.ModLibs;
-
-import vazkii.botania.common.core.handler.IMCHandler;
 
 @Mod(modid = ModLibs.MOD_ID, name = ModLibs.NAME, version = ModLibs.VERSION, dependencies = ModLibs.DEPENDENCIES, acceptedMinecraftVersions = ModLibs.MINECRAFT_VERSION)
 public class Armora {
