@@ -1,0 +1,12 @@
+[
+{
+  "modid": "armora",
+  "name": "ArmorA",
+  "description": "Allows further improvement to armor besides enchantments.",
+  "version" : "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://www.lomeli12.net/",
+  "authorList": ["Lomeli12"],
+  "credits": "Lomeli12"
+}
+]
