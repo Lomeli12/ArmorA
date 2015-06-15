@@ -10,14 +10,14 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 
 import net.lomeli.armora.api.ArmorAAPI;
 import net.lomeli.armora.api.charms.AbstractCharm;
-import net.lomeli.armora.api.charms.CharmType;
+import net.lomeli.armora.api.charms.CharmEventType;
 import net.lomeli.armora.libs.CharmIDs;
 
 public class GlassCharm extends AbstractCharm {
     private static final int[] values = { 3, 2, 1, 0 };
     @Override
-    public void performCharm(World world, EntityLivingBase entity, ItemStack stack, CharmType type, Object... data) {
-        if (type == CharmType.RENDER_PRE && data != null && data.length > 0 && data[0] instanceof RenderPlayerEvent.SetArmorModel) {
+    public void performCharm(World world, EntityLivingBase entity, ItemStack stack, CharmEventType type, Object... data) {
+        if (type == CharmEventType.RENDER_PRE && data != null && data.length > 0 && data[0] instanceof RenderPlayerEvent.SetArmorModel) {
             RenderPlayerEvent.SetArmorModel event = (RenderPlayerEvent.SetArmorModel) data[0];
             ItemArmor armor = (ItemArmor) stack.getItem();
             EntityPlayer player = (EntityPlayer) entity;

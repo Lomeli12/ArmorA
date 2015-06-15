@@ -1,6 +1,5 @@
 package net.lomeli.armora.api.charms;
 
-import java.util.List;
 import java.util.Map;
 
 import net.minecraft.item.Item;
@@ -9,12 +8,14 @@ import net.minecraft.item.ItemStack;
 public interface ICharmRegistry {
     /**
      * Registers a new charm.
+     *
      * @param charm
      */
     public void registerCharm(AbstractCharm charm);
 
     /**
      * Checks if charmID has been registered
+     *
      * @param charmID
      * @return
      */
@@ -22,33 +23,36 @@ public interface ICharmRegistry {
 
     /**
      * Gets charms from ID. Returns null if no charm with the specific id is found.
+     *
      * @param id
      * @return
      */
     public AbstractCharm getCharm(String id);
 
     /**
-     * Adds item to blacklist so they cannot be charmed.
+     * Blacklist charm from item
+     *
      * @param item
+     * @param charm
      */
-    public void addItemToBlackList(String item);
+    public void blackListCharmFromItem(String item, String charm);
 
     /**
-     * Check if item is blacklisted
+     * Check if item can have charm
+     *
      * @param item
+     * @param charm
      * @return
      */
-    public boolean isItemBlackListed(Item item);
+    public boolean canApplyCharmToItem(String item, String charm);
 
-    /**
-     * Check if itemstack is blacklisted.
-     * @param stack
-     * @return
-     */
-    public boolean isItemBlackListed(ItemStack stack);
+    public boolean canApplyCharmToItem(Item item, String charm);
+
+    public boolean canApplyCharmToItem(ItemStack stack, String charm);
 
     /**
      * Get charms applied to item. If the item has no charms, it return a 0 lenght array.
+     *
      * @param stack
      * @return
      */
@@ -56,6 +60,7 @@ public interface ICharmRegistry {
 
     /**
      * Checks if stack has specific charm.
+     *
      * @param stack
      * @param charmID
      * @return
@@ -64,20 +69,23 @@ public interface ICharmRegistry {
 
     /**
      * Apply charm to item. If item is blacklisted or already has charm, will return false.
+     *
      * @param stack
      * @param charmID
      */
     public boolean applyCharmToItem(ItemStack stack, String charmID);
 
     /**
-     * Gets copy of charm registry.
+     * Gets a copy of charm registry.
+     *
      * @return
      */
     public Map<String, AbstractCharm> getCharmMap();
 
     /**
-     * Gets copy of blacklist.
+     * Gets a copy of the item charm blacklist
+     *
      * @return
      */
-    public List<String> getBlackList();
+    public Map<String, String> getItemCharmBlackList();
 }

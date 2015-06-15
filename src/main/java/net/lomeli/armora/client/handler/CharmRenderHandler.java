@@ -2,9 +2,7 @@ package net.lomeli.armora.client.handler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
@@ -12,7 +10,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 import net.lomeli.armora.api.ArmorAAPI;
 import net.lomeli.armora.api.charms.AbstractCharm;
-import net.lomeli.armora.api.charms.CharmType;
+import net.lomeli.armora.api.charms.CharmEventType;
 
 public class CharmRenderHandler {
 
@@ -21,7 +19,7 @@ public class CharmRenderHandler {
         EntityPlayer player = event.entityPlayer;
         InventoryPlayer invPlayer = player.inventory;
 
-        dispatchRenders(invPlayer, player, event, CharmType.RENDER_PRE);
+        charmRenders(invPlayer, player, event, CharmEventType.RENDER_PRE);
     }
 
     @SubscribeEvent
@@ -29,7 +27,7 @@ public class CharmRenderHandler {
         EntityPlayer player = event.entityPlayer;
         InventoryPlayer invPlayer = player.inventory;
 
-        dispatchRenders(invPlayer, player, event, CharmType.RENDER_PRE);
+        charmRenders(invPlayer, player, event, CharmEventType.RENDER_PRE);
     }
 
     @SubscribeEvent
@@ -37,19 +35,18 @@ public class CharmRenderHandler {
         EntityPlayer player = event.entityPlayer;
         InventoryPlayer invPlayer = player.inventory;
 
-        dispatchRenders(invPlayer, player, event, CharmType.RENDER_POST);
+        charmRenders(invPlayer, player, event, CharmEventType.RENDER_POST);
     }
 
-    private void dispatchRenders(InventoryPlayer inv, EntityPlayer player, RenderPlayerEvent event, CharmType type) {
-        for (int i = 0; i < inv.getSizeInventory(); i++) {
-            ItemStack stack = inv.getStackInSlot(i);
-            if (stack != null && !ArmorAAPI.charmRegistry.isItemBlackListed(stack)) {
-                Item item = stack.getItem();
+    private void charmRenders(InventoryPlayer inv, EntityPlayer player, RenderPlayerEvent event, CharmEventType type) {
+        for (int i = 0; i < 4; i++) {
+            ItemStack stack = inv.armorItemInSlot(i);
+            if (stack != null) {
                 String[] charms = ArmorAAPI.charmRegistry.getItemCharms(stack);
                 if (charms != null && charms.length > 0) {
                     for (String id : charms) {
                         AbstractCharm charm = ArmorAAPI.charmRegistry.getCharm(id);
-                        if (charm != null)
+                        if (charm != null && ArmorAAPI.charmRegistry.canApplyCharmToItem(stack, id))
                             charm.performCharm(player.worldObj, player, stack, type, event);
                     }
                 }

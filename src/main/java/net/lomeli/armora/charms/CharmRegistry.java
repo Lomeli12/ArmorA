@@ -1,10 +1,8 @@
 package net.lomeli.armora.charms;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import java.util.List;
 import java.util.Map;
 
 import net.minecraft.init.Blocks;
@@ -24,11 +22,11 @@ import net.lomeli.armora.libs.ModLibs;
 
 public class CharmRegistry implements ICharmRegistry {
     private Map<String, AbstractCharm> charmMap;
-    private List<String> blackList;
+    private Map<String, String> itemCharmBlackList;
 
     public CharmRegistry() {
         charmMap = Maps.newHashMap();
-        blackList = Lists.newArrayList();
+        itemCharmBlackList = Maps.newHashMap();
     }
 
     @Override
@@ -55,21 +53,46 @@ public class CharmRegistry implements ICharmRegistry {
     }
 
     @Override
-    public void addItemToBlackList(String item) {
-        blackList.add(item);
+    public void blackListCharmFromItem(String item, String charm) {
+        if (Strings.isNullOrEmpty(item) || Strings.isNullOrEmpty(charm))
+            return;
+        if (itemCharmBlackList.containsKey(item))
+            itemCharmBlackList.put(item, itemCharmBlackList.get(item) + charm + ";");
+        else
+            itemCharmBlackList.put(item, charm + ";");
     }
 
     @Override
-    public boolean isItemBlackListed(Item item) {
+    public boolean canApplyCharmToItem(String item, String charm) {
+        if (Strings.isNullOrEmpty(item) || Strings.isNullOrEmpty(charm))
+            return false;
+        if (itemCharmBlackList.containsKey(item)) {
+            String blackList = itemCharmBlackList.get(item);
+            if (!Strings.isNullOrEmpty(blackList)) {
+                String[] values = blackList.split(";");
+                if (values != null && values.length > 0) {
+                    for (String id : values) {
+                        if (!Strings.isNullOrEmpty(id) && id.equals(charm))
+                            return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean canApplyCharmToItem(Item item, String charm) {
         if (item == null)
             return false;
-        String name = itemRegistry.getNameForObject(item);
-        return blackList.contains(name);
+        return canApplyCharmToItem(itemRegistry.getNameForObject(item), charm);
     }
 
     @Override
-    public boolean isItemBlackListed(ItemStack stack) {
-        return stack == null ? false : isItemBlackListed(stack.getItem());
+    public boolean canApplyCharmToItem(ItemStack stack, String charm) {
+        if (stack == null)
+            return false;
+        return canApplyCharmToItem(stack.getItem(), charm);
     }
 
     @Override
@@ -85,7 +108,7 @@ public class CharmRegistry implements ICharmRegistry {
     public boolean itemHasCharm(ItemStack stack, String charmID) {
         if (stack == null || stack.getItem() == null)
             return false;
-        if (isItemBlackListed(stack))
+        if (!canApplyCharmToItem(stack, charmID))
             return false;
         if (!charmWithIDExists(charmID))
             return false;
@@ -110,15 +133,13 @@ public class CharmRegistry implements ICharmRegistry {
 
     @Override
     public Map<String, AbstractCharm> getCharmMap() {
-        Map<String, AbstractCharm> copy = Maps.newHashMap();
-        copy.putAll(charmMap);
+        Map<String, AbstractCharm> copy = Maps.newHashMap(charmMap);
         return copy;
     }
 
     @Override
-    public List<String> getBlackList() {
-        List<String> copy = Lists.newArrayList();
-        copy.addAll(blackList);
+    public Map<String, String> getItemCharmBlackList() {
+        Map<String, String> copy = Maps.newHashMap(itemCharmBlackList);
         return copy;
     }
 

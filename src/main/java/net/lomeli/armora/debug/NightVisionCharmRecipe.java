@@ -15,26 +15,26 @@ import net.lomeli.armora.libs.CharmIDs;
  * This is only temporary while I test the charms. In the future
  * there will be a new mechanic for adding charms.
  */
-public class GlassCharmRecipe implements IRecipe {
+public class NightVisionCharmRecipe implements IRecipe {
     @Override
     public boolean matches(InventoryCrafting invCraft, World world) {
-        boolean foundGlass = false;
+        boolean foundGlowStone = false;
         boolean foundItem = false;
 
         for (int i = 0; i < invCraft.getSizeInventory(); i++) {
             ItemStack stack = invCraft.getStackInSlot(i);
             if (stack != null) {
-                if (stack.getItem() == Item.getItemFromBlock(Blocks.glass) && !foundGlass)
-                    foundGlass = true;
+                if (stack.getItem() == Item.getItemFromBlock(Blocks.glowstone) && !foundGlowStone)
+                    foundGlowStone = true;
                 else if (!foundItem) {
-                    if (ArmorAAPI.charmRegistry.canApplyCharmToItem(stack, CharmIDs.GLASS) && !ArmorAAPI.charmRegistry.itemHasCharm(stack, CharmIDs.GLASS) && CharmRegistry.isValidArmor(stack))
+                    if (ArmorAAPI.charmRegistry.canApplyCharmToItem(stack, CharmIDs.SIGHT) && !ArmorAAPI.charmRegistry.itemHasCharm(stack, CharmIDs.SIGHT) && CharmRegistry.isValidArmor(stack))
                         foundItem = true;
                     else return false;
                 } else return false;
             }
         }
 
-        return foundGlass && foundItem;
+        return foundGlowStone && foundItem;
     }
 
     @Override
@@ -47,11 +47,11 @@ public class GlassCharmRecipe implements IRecipe {
                 item = stack;
         }
 
-        if (!ArmorAAPI.charmRegistry.canApplyCharmToItem(item, CharmIDs.GLASS) || ArmorAAPI.charmRegistry.itemHasCharm(item, CharmIDs.GLASS))
+        if (!ArmorAAPI.charmRegistry.canApplyCharmToItem(item, CharmIDs.SIGHT) || ArmorAAPI.charmRegistry.itemHasCharm(item, CharmIDs.SIGHT))
             return null;
 
         ItemStack copy = item.copy();
-        ArmorAAPI.charmRegistry.applyCharmToItem(copy, CharmIDs.GLASS);
+        ArmorAAPI.charmRegistry.applyCharmToItem(copy, CharmIDs.SIGHT);
         return copy;
     }
 

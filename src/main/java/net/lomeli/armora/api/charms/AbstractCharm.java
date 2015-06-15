@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public abstract class AbstractCharm {
-    public abstract void performCharm(World world, EntityLivingBase entity, ItemStack stack, CharmType type, Object...data);
+    public abstract void performCharm(World world, EntityLivingBase entity, ItemStack stack, CharmEventType type, Object...data);
 
     public abstract String getCharmID();
 
